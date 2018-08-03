@@ -1,0 +1,12 @@
+{
+    "version": "0.1.0",
+    "command": "g++",
+    "isShellCommand": true, // 是否为Shell命令
+    "args": [
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}.exe"
+    ],
+    "showOutput": "always"
+}
