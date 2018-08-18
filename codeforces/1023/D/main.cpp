@@ -7,17 +7,42 @@ bool allAreZero = true;
 int lastNonZero = 1;
 int firstZero = 0;
 
-int rmq[32][1000000];
 int l[1000000];
 int r[1000000];
-int query(int l, int r)
+template <typename T, typename Compare = std::less<T>>
+class RMQ
 {
-    if (l > r)
-        return q + 1;
-    int k = log2(r - l + 1);
-    return min(rmq[k][l], rmq[k][r - (1 << k) + 1]);
-}
+  public:
+    vector<vector<int>> st;
+    function<bool (T, T)> cmp;
 
+    RMQ(vector<T> array)
+    {
+        cmp = Compare();
+        size_t size = array.size();
+        int k = log2(size);
+        st.push_back(array);
+        for (int k = 1; (1 << k) < size; k++)
+        {
+            vector<T> tmp = vector<T>(size);
+            for (size_t i = 0; i < tmp.size(); i++)
+            {
+                int rIndex = min(i + (1 << (k - 1)), size);
+                tmp[i] = cmp(st[k - 1][i], st[k - 1][rIndex]) ? st[k - 1][i] : st[k - 1][rIndex];
+            }
+            st.push_back(move(tmp));
+        }
+    }
+
+    T query(size_t l, size_t r)
+    {
+        int k = log2(r - l);
+        if (cmp(st[k][l], st[k][r - (1 << k)]))
+            return st[k][l];
+        else
+            return st[k][r - (1 << k)];
+    }
+};
 int main()
 {
     scanf("%d%d", &n, &q);
@@ -58,16 +83,7 @@ int main()
             printf("%d ", q);
         return 0;
     }
-    for (int i = 0; i < n; i++)
-        rmq[0][i] = a[i];
-    for (int k = 1; k < log2(n) + 1; k++)
-    {
-        for (int i = 0; i < n; i++)
-        {
-            int rIndex = min(i + (1 << (k - 1)), n - 1);
-            rmq[k][i] = min(rmq[k - 1][i], rmq[k - 1][rIndex]);
-        }
-    }
+    RMQ<int> rmq(a);
     memset(l, -1, sizeof(l));
     memset(r, -1, sizeof(r));
     for (int i = 0; i < n; i++)
@@ -81,7 +97,9 @@ int main()
     {
         if (l[x] != -1)
         {
-            if (query(l[x] + 1, r[x] - 1) < x)
+            if (r[x] - 1 < l[x] + 1)
+                continue;
+            if (rmq.query(l[x] + 1, r[x]) < x)
             {
                 puts("NO");
                 return 0;
