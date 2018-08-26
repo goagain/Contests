@@ -10,6 +10,7 @@ public:
     }
     ~judge()
     {
+        freopen("CON", "w", stdout);
         clock_t endTime = clock();
         printf("\n\nprogram run with %d ms\n", (endTime - startTime) * 1000 / CLOCKS_PER_SEC);
         system("pause");
