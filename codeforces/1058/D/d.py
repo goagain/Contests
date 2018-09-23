@@ -8,31 +8,33 @@ k = int(line[2])
 
 def gcd(a, b):
     if b == 0:
-        return int(a)
+        return a
     else:
-        return gcd(b, int(a % b))
+        return gcd(b, (a % b))
 
 
-target = n * m * 2 / k
-if int(target) != target or k < 2:
+target = n * m * 2 // k
+if n * m * 2 % k or k < 2:
     print("NO")
 else:
     target = int(target)
     
-    gcd = math.gcd(target, n)
-    if gcd <= n and target // gcd <= m:
-        width = gcd
+    exgcd = gcd(target, n)
+    if exgcd <= n and target // exgcd <= m:
+        width = exgcd
         height = target // width
         print('YES')
         print(0, 0)
         print(width, 0)
         print(0, height)
     else:
-        gcd = math.gcd(target, m)
-
-        height = gcd
-        width = target // height
-        print('YES')
-        print(0, 0)
-        print(width, 0)
-        print(0, height)
+        exgcd = gcd(target, m)
+        if exgcd <= m and target // exgcd <= n:
+            height = exgcd
+            width = target // height
+            print('YES')
+            print(0, 0)
+            print(width, 0)
+            print(0, height)
+        else:
+            print("NO")
