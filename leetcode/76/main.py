@@ -5,26 +5,26 @@ class Solution:
         count = {}
         for c in t:
             if c in count:
-                count[c] += 1
+                count[ord(c)] += 1
             else:
-                count[c] = 1
+                count[ord(c)] = 1
         bestStart = -1
         bestEnd = len(s)
         start = 0
         cur = 0
         skipCheck = False
         for cur in range(len(s)):
-            if s[cur] in count:
-                count[s[cur]] -= 1
+            if ord(s[cur]) in count:
+                count[ord(s[cur])] -= 1
             else:
                 continue
             skipCheck = False
-            while (skipCheck or all(count[x] <= 0 for x in count)) and start <= cur:
+            while (skipCheck or all(x <= 0 for x in count.values())) and start <= cur:
                 if cur + 1 - start < bestEnd - bestStart:
                     bestStart, bestEnd = start, cur + 1
                 if s[start] in count:
-                    count[s[start]] += 1
-                    if count[s[start]] <= 0:
+                    count[ord(s[start])] += 1
+                    if count[ord(s[start])] <= 0:
                         skipCheck = True
                         start += 1
                     else:
