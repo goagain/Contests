@@ -1,27 +1,42 @@
 class Solution:
-    def getOrd(self, c : str):
-        return ord(c)
-
     def minWindow(self, s: str, t: str) -> str:
         if t == "":
             return ""
-        count = [0] * 256
+        count = {}
         for c in t:
-            count[self.getOrd(c)] += 1
-
+            if c in count:
+                count[c] += 1
+            else:
+                count[c] = 1
         bestStart = -1
         bestEnd = len(s)
         start = 0
         cur = 0
+        skipCheck = False
         for cur in range(len(s)):
-            count[self.getOrd(s[cur])] -= 1
-            while all(x <= 0 for x in count) and start <= cur:
-                if cur + 1 - start < bestEnd - bestStart:
-                    bestStart, bestEnd = start, cur + 1
-                count[self.getOrd(s[start])] += 1
-                start += 1
+            if s[cur] in count:
+                count[s[cur]] -= 1
             else:
                 continue
+            skipCheck = False
+            while (skipCheck or all(count[x] <= 0 for x in count)) and start <= cur:
+                if cur + 1 - start < bestEnd - bestStart:
+                    bestStart, bestEnd = start, cur + 1
+                if s[start] in count:
+                    count[s[start]] += 1
+                    if count[s[start]] <= 0:
+                        skipCheck = True
+                        start += 1
+                    else:
+                        skipCheck = False
+                        start += 1
+                        break
+                else:
+                    skipCheck = True
+                    start += 1
+            else:
+                continue
+
         if bestStart != -1:
             return s[bestStart:bestEnd]
         else:
