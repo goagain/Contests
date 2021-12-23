@@ -1,7 +1,6 @@
 {
-    "version": "0.1.0",
-    "command": "g++",
-    "isShellCommand": true, // 是否为Shell命令
+    "version": "2.0.0",
+    "command": "g++", // 是否为Shell命令
     "args": [
         "-g",
         "${file}",
@@ -9,5 +8,23 @@
         "-o",
         "${fileDirname}/${fileBasenameNoExtension}.exe"
     ],
-    "showOutput": "always"
+    "tasks": [
+        {
+            "label": "g++",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-g",
+                "${file}",
+                "${workspaceRoot}/pattern/judge/judge.cpp",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.exe"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "_id": "build",
+                "isDefault": false
+            }
+        }
+    ]
 }
