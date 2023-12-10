@@ -5,10 +5,7 @@ from typing import List
 class Solution:
     def countSubarrays(self, nums: List[int], k: int) -> int:
         length = len(nums)
-        total = length * (length+1) // 2
-        if k == 1:
-            return total
-        
+        total = length * (length+1) // 2        
         maximum = max(nums)
         
         ans = 0
@@ -22,11 +19,12 @@ class Solution:
                 if nums[last] == maximum:
                     counts -= 1
                 last += 1
-            print(last, i)
+            # print(last, i)
             ans += i - last + 1
 
         # print(ans)
         return total - ans
+
     def verify(self, nums: List[int], k: int):
         ans = 0
         for i in range(len(nums)):
